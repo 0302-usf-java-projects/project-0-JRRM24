@@ -1,72 +1,107 @@
 package com.revature.service;
-
-import com.revature.exception.AccountNameAlreadyTakenException;
-import com.revature.exception.BalanceTooLowException;
-import com.revature.exception.PasswordTooShortException;
-import com.revature.model.Account;
-import java.util.Scanner;
-import java.util.Set;
-import com.revature.model.*;
-
 import com.revature.repository.*;
-import java.util.HashSet;
+import java.util.*; 
+import com.revature.exception.*;
+import com.revature.model.*; 
 public class BankServices {
-	private AccountDAO accountManager = new AccountDAO(); 
-	
-	public void createAccount() {
-		Scanner sc = new Scanner(System.in); 
-		int numTries = 0; 
-		while (numTries < 3) {
-			System.out.println("Please enter your desired username");
-			String username = sc.nextLine(); 
-			System.out.println("Please enter your desired password"); 
-			String password = sc.nextLine(); 
-			try {
-				Account newAccount = new Account(username, password); 
-				this.accountManager.addAccount(newAccount);
-				System.out.println("Thank you, your account has been created and you may now log in."); 
-				break;
-			} catch (PasswordTooShortException e) {
-				System.out.println("Passwords must be at least 8 characters long, please try again."); 
-			} catch (AccountNameAlreadyTakenException e) {
-				System.out.println("That username is already taken. If you already have an account, please log in instead."); 
-			}
-			numTries += 1; 
-		
-		}
-		if (numTries == 3) {
-			System.out.println("It seems like you were having some issues. Returning to the menu, please try again.");
-		}
+	private static BankServices bs = null; 
+	private DAOCustomers accountManager = new DAOCustomers();
+	public BankServices() {
 		
 	}
 	
-	public boolean attemptLogIn(String username, String password, User user) {
-		Set<Account> accounts = accountManager.getAll(); 
-		for (Account a: accounts) {
-			if (a.authenticate(username, password)) {
-				user.setUseraccount(a); 
+	public static BankServices getBankServices() {
+		if (BankServices.bs == null) {
+			BankServices.bs = new BankServices(); 
+			return BankServices.bs;
+		} else {
+			return BankServices.bs; 
+		}
+	}
+	
+	public void makeAccount(String username, String password) throws UsernameAlreadyTakenException, PasswordTooShortException {
+		HashMap customers = accountManager.getAllCustomers();
+		if (customers.containsKey(username)) {
+			throw new UsernameAlreadyTakenException(); 
+		} else {
+			Customer newCustomer = new Customer(username, password); 
+			customers.put(username, newCustomer);
+			accountManager.updateCustomerAccounts(customers);
+		}
+	}
+	
+	public boolean attemptLogIn(String username, String password) {
+		HashMap<String, Customer> customers = accountManager.getAllCustomers();
+		Set<String> keys = customers.keySet();		
+		for (String key: keys) {
+			Customer customer = customers.get(key);
+			if (customer.authenticate(username, password)) {
 				return true; 
 			}
+		
 		}
 		return false; 
+		
 	}
 	
-	public Account withdrawMoney(double input, Account userAccount) throws BalanceTooLowException {
-		double balance = userAccount.getBalance();
-		if (input > balance) {
-			throw new BalanceTooLowException();
-		} else {
-			userAccount.reduceBalance(input);
-			this.accountManager.updateAccount(userAccount);
-			return userAccount; 
+	public Customer setCustomer(String username) {
+		return accountManager.getCustomer(username);
+	}
+	
+	/**
+	 * this creates a new bank account to associate with a Customer object 
+	 * @param customer
+	 * @param deposit
+	 * @return
+	 */
+	public Customer newAccount(Customer customer, double deposit) {
+		Random rand = new Random(); 
+		HashMap<Integer, Account> accounts = customer.getAccounts();
+		while (true) {
+			 int randomNumber = rand.nextInt(4000);
+			 if (!accounts.containsKey(randomNumber)) {
+				 Account newAccount = new Account(deposit, randomNumber);
+				 accounts.put(randomNumber, newAccount);
+				 customer.setAccounts(accounts);
+				 accountManager.updateCustomer(customer);
+				 System.out.println("Your account has been created. Your new account number is " + randomNumber);
+
+				 break; 
+			 }
 		}
+		return customer; 
 	}
 	
-	public Account depositMoney(double input, Account userAccount) {
-		 
-        userAccount.increaseBalance(input);
-     	this.accountManager.updateAccount(userAccount);
-     	return userAccount;
+	public Customer depositMoney(Customer customer, int accountNumber, double amount) {
+		Account account = customer.getAccount(accountNumber);
+		double currentBalance = account.getBalance();
+		double newBalance = currentBalance += amount;
+		account.setBalance(newBalance);
+		customer.addAccount(accountNumber, account);
+		accountManager.updateCustomer(customer);
+		System.out.println("Thank you, your new balance is " + newBalance);
+		return customer; 
+		
+		
+		
 	}
 	
+	public Customer withdrawMoney(Customer customer, int accountNumber, double amount) throws BalanceTooLowException {
+		Account account = customer.getAccount(accountNumber);
+		double currentBalance = account.getBalance();
+		if (amount > currentBalance) {throw new BalanceTooLowException();};
+		double newBalance = currentBalance -= amount;
+		customer.addAccount(accountNumber, account);
+		accountManager.updateCustomer(customer);
+		System.out.println("Thank you, your new balance is " + newBalance);
+		System.out.println("-----------------------------------------");
+		return customer; 
+		
+	}
+	
+	public void printBalance(Customer customer, int accountNumber) {
+		System.out.println("Your current balance is " + customer.getAccount(accountNumber).getBalance());
+		System.out.println("-----------------------------------------");
+	}
+
 }
