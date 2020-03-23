@@ -1,14 +1,17 @@
 package com.revature.model;
-import java.util.ArrayList;
+
 import com.revature.exception.AccountNameAlreadyTakenException;
 import com.revature.exception.BalanceTooLowException;
 import com.revature.exception.PasswordTooShortException; 
 public class Account {
+	/**
+	 * Represent the user's account. It has a username and a password associated with it, as well as an account balance.
+	 */
 	private static final int required_password_length = 8; 
 	private double balance = 0; 
 	private String username; 
 	private String password; 
-	private ArrayList<String> transactionHistory;
+	
 	
 	public Account(String username, String password) throws PasswordTooShortException, AccountNameAlreadyTakenException {
 		this.setUsername(username);
@@ -27,6 +30,9 @@ public class Account {
 		this.balance -= amount;
 	}
 	
+	private void setBalance(double balance) {
+		this.balance = balance; 
+	}
 	
 	public void increaseBalance(double amount) {
 		this.balance += amount; 
@@ -48,9 +54,6 @@ public class Account {
 			throw new PasswordTooShortException(); 
 		}
 		this.password = password;
-	}
-	public ArrayList<String> getTransactionHistory() {
-		return transactionHistory;
 	}
 	
 	

@@ -8,7 +8,8 @@ import com.revature.service.BankServices;
 /**
  * This class runs the Menu for the bank. 
  * Each instance has a user object used to determine if someone is logged in
- * a scanner, and a service object that holds the logic for functions like account creation/manipulation 
+ * and to hold a user's account for manipulation, a scanner, and a service object that holds the logic for functions like 
+ * account creation/manipulation 
  * @author jordanmorgan
  *
  */
@@ -63,7 +64,7 @@ public class MenuRunner {
 	}
 	
 	public void logOut() {
-		System.out.println("Thank, you will be returned to the welcome menu.");
+		System.out.println("Thanks, you will be returned to the welcome menu.");
 		System.out.println("---------------------------------");
 		this.user = new User(); 
 	}
@@ -115,11 +116,11 @@ public class MenuRunner {
 	public void makeWithdrawal() {
 		System.out.println("Please enter the amount that you would like to withdraw.");
 		Double input = Double.parseDouble(sc.nextLine());
-		Account userAccount = this.user.getUseraccount(); 
+		Account userAccount = this.user.getUserAccount(); 
 		try  {
 			Account updatedAccount = bs.withdrawMoney(input, userAccount);
 			this.user.setUseraccount(updatedAccount);
-			System.out.println("Thank you. Your current balance is: " + this.user.getUseraccount().getBalance());
+			System.out.println("Thank you. Your current balance is: " + this.user.getUserAccount().getBalance());
 			
 		} catch (BalanceTooLowException e) {
 			System.out.println("I'm sorry, but your balance is too low to withdraw that much money.");
@@ -130,7 +131,7 @@ public class MenuRunner {
 	}
 	
 	public void makeDeposit() {
-		Account userAccount = this.user.getUseraccount();
+		Account userAccount = this.user.getUserAccount();
 		System.out.println("Please enter the amount of money you wish to deposit.");
 		double input = Double.parseDouble(sc.nextLine());
 		if (input > 0) {
