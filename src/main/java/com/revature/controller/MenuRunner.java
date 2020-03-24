@@ -5,12 +5,12 @@ import com.revature.repository.*;
 import com.revature.service.*; 
 import java.util.*; 
 public class MenuRunner {
-	Customer user = new Customer(); 
+	User user = new User(); 
 	Scanner sc = new Scanner(System.in); 
 	BankServices bs = new BankServices();
 	
 	public void runMenu() {
-		while (!user.loggedin) {
+		while (!user.loggedIn) {
 			String input = runWelcomeMenu();
 			switch (input) {
 			case "1": runAccountCreation();
@@ -20,6 +20,7 @@ public class MenuRunner {
 				
 			case "3": 
 				System.out.println("Thank you, please come again.");
+				sc.close();
 				System.exit(0);
 				break;
 			default:
@@ -28,11 +29,11 @@ public class MenuRunner {
 		}
 			
 			
-			while (user.loggedin) {
+			while (user.loggedIn) {
 				String input = runMainMenu();
 				switch (input) {
 				case "1": 
-					openNewAccount();
+					checkBalance();
 					break;
 				case "2":
 					depositMoney();
@@ -40,11 +41,13 @@ public class MenuRunner {
 				case "3":
 					withdrawMoney();
 					break;
-				case "5":
-					this.user = new Customer();
-					break;
 				case "4":
-					checkBalance();
+					transferMoney();
+					break;
+				case "5":
+					user = new User();
+					System.out.println("You are now logged out.");
+					System.out.println("Returning to the welcome menu.");
 					break;
 				default:
 					System.out.println("I'm sorry, I didn't understand that input. Care to try again?");
@@ -58,8 +61,8 @@ public class MenuRunner {
 	
 	public String runWelcomeMenu() {
 		System.out.println("Welcome to the bank. Please select one of the following options.");
-		System.out.println("1: Create a new customer account.");
-		System.out.println("2: Log in and manage or apply for new bank accounts.");
+		System.out.println("1: Create a new account.");
+		System.out.println("2: Log in to an existing account.");
 		System.out.println("3: Exit");
 		String input = sc.nextLine(); 
 		return input; 
@@ -67,17 +70,18 @@ public class MenuRunner {
 	
 	public String runMainMenu() {
 		System.out.println("Welcome back to the bank. Please select one of the following options.");
-		System.out.println("1: Open a bank new account.");
-		System.out.println("2: Deposit money in an existing account.");
-		System.out.println("3: Withdraw money from an existing bank account.");
-		System.out.println("4: Check the balance of an existing account");
-		System.out.println("5: Log out and return to the welcome menu");
+		System.out.println("1: Check your balance.");
+		System.out.println("2: Deposit money.");
+		System.out.println("3: Withdraw money.");
+		System.out.println("4: Transfer money to a different account.");
+		System.out.println("5: Log out and return to the welcome menu.");
 		String input = sc.nextLine(); 
 		return input; 
 	}
 	
 	public void runAccountCreation() {
 		int numTries = 0; 
+		int accountNumber = 0;
 		while (numTries < 3) {
 			System.out.println("Please enter your desired username");
 			String username = sc.nextLine(); 
@@ -85,8 +89,24 @@ public class MenuRunner {
 			String password = sc.nextLine(); 
 			
 			try {
-				bs.makeAccount(username, password);
-				break;
+				System.out.println("Please enter the amount of money you would like to deposit in your new account.");
+				double amount = 0;
+				try {
+				 amount = Double.parseDouble(sc.nextLine());
+				} catch (Exception e) {
+					System.out.println("You must enter an positive amount of money to deposit.");
+					System.out.println("Try again");
+					amount = 0;
+				}
+				
+				if (amount < 200) {
+					System.out.println("I'm sorry, but you must deposit at least $200 to open a new account.");
+					System.out.println("-----------------------------------------");
+				} else {
+				System.out.println("Creating a new account with an initial balance of " + amount);
+				 accountNumber = bs.makeAccount(username, password, amount); 
+				break;}
+				
 			} catch (PasswordTooShortException e) {
 				System.out.println("I'm sorry, but passwords must be at least 8 characters long. Please try again.");
 				System.out.println("-----------------------------------------");
@@ -101,7 +121,8 @@ public class MenuRunner {
 			System.out.println("It seems like you were having some issues. Returning to the menu, please try again.");
 			System.out.println("-----------------------------------------");
 		} else {
-			System.out.println("Thank you, your account has been created. You may now log in.");
+			System.out.println("Thank you, your account has been created and you may now log in.");
+			System.out.println("Your account number is " + accountNumber + ". Please write it down.");
 			System.out.println("-----------------------------------------");
 		}
 	}
@@ -111,79 +132,105 @@ public class MenuRunner {
 		String username = sc.nextLine();
 		System.out.println("Please enter your password");
 		String password = sc.nextLine();
-		if (bs.attemptLogIn(username, password)) {
-			this.user = bs.setCustomer(username);
-			System.out.println("Thank you, you are now logged in.");
-			System.out.println("-----------------------------------------");
+		Account result = bs.logIn(username, password);
+		if (result.nullFlag == true) {
+			System.out.println("Either your username or password was incorrect. Please try again.");
 		} else {
-			System.out.println("I'm sorry, but your username or password was incorrect. Please try again.");
+			user.loggedIn = true; 
+			user.account = result;
+			System.out.println("Thank you, you are now logged in. Taking you to the main menu.");
 			System.out.println("-----------------------------------------");
+
 		}
 	}
 	
-	public void openNewAccount() {
-		System.out.println("Please enter the amount of money you would like to deposit in your new account.");
-		double input = Double.parseDouble(sc.nextLine());
-		if (input < 200) {
-			System.out.println("I'm sorry, but you must deposit at least $200 to open a new account. Returning to the menu.");
-			System.out.println("-----------------------------------------");
-		} else {
-			this.user = bs.newAccount(this.user, input);
-			System.out.println("Your balance is " + input);
-			System.out.println("Please remember your account number, you will need it to use your account. Returning to the menu.");
-			System.out.println("-----------------------------------------");
-		}
+	public void checkBalance() {
+		System.out.println("Your current balance is " +  user.account.getBalance());
+		System.out.println("Returning to the main menu.");
+		System.out.println("-----------------------------------------");
+
 	}
 	
 	public void depositMoney() {
-		System.out.println("Enter the account number of the account you would like to deposit money into.");
-		int accountNumber = Integer.parseInt(sc.nextLine());
-		if (user.accountExists(accountNumber)) {
-			System.out.println("Enter the amount of money you wish to deposit.");
-			double amount = Double.parseDouble(sc.nextLine());
-			if (amount < 0) {System.out.println("You must deposit a positive amount of money, please try again.");
-			System.out.println("-----------------------------------------");
-				} else {
-					this.user = bs.depositMoney(user, accountNumber, amount);	
-					System.out.println("Returning to the main menu, you may make another transaction");
-					System.out.println("-----------------------------------------");
-				}
-		} else {
-			System.out.println("That account does not exist. Please check your numbers and try again.");
-			System.out.println("-----------------------------------------");
+		double amount; 
+		try {
+			System.out.println("Please enter the amount that you would like to deposit.");
+			amount = Double.parseDouble(sc.nextLine());
+			if (amount > 0) {
+				Account temp = user.account;
+				temp = bs.deposit(temp, amount);
+				user.account = temp;
+				System.out.println("Thank you. Your current balance is: " + user.account.getBalance());
+				System.out.println("Returning to the main menu");
+				System.out.println("-----------------------------------------");
+			}
+		} catch (Exception e) {
+			System.out.println("I didn't understand you. Please enter a numerical amount of money.");
 		}
 		
 	}
 	
 	public void withdrawMoney() {
+		double amount;
 		try {
-			System.out.println("Please enter the account number for the account you wish to withdraw from.");
-			int num = Integer.parseInt(sc.nextLine());
-			if (user.accountExists(num)) {
-				System.out.println("Please enter the amount of money you would like to withdraw.");
-				double amount = Double.parseDouble(sc.nextLine());
-				this.user = bs.withdrawMoney(user, num, amount);
-			} else {
-				System.out.println("I'm sorry, but that account does not exist. Please try again.");
-				System.out.println("-----------------------------------------");
-			}
+			System.out.println("Please enter the amount that you would like to withdraw.");
+			amount = Double.parseDouble(sc.nextLine());
+			Account temp = user.account;
+			temp = bs.withdraw(temp, amount);
+			user.account = temp;
+			System.out.println("Thank you. You have withdrawn " + amount + " and your new balnace is " + user.account.getBalance());
+			System.out.println("Returning to the main menu.");
+			System.out.println("-----------------------------------------");
+
 			
 		} catch (BalanceTooLowException e) {
-			System.out.println("I'm sorry, but you do not have that much money in your account. Returning to the menu.");
+			System.out.println("You must withdraw a positive amount of money that is greater than your current balance.");
+			System.out.println("Returning to the main menu. Please try again.");
 			System.out.println("-----------------------------------------");
+
 		}
 	}
 	
-	public void checkBalance() {
-		System.out.println("Please enter the account number for the account you wish to check.");
-		int accountNumber = Integer.parseInt(sc.nextLine());
-		if (user.accountExists(accountNumber)) {
-			bs.printBalance(user, accountNumber);
-		} else {
-			System.out.println("I'm sorry, but that account does not exist. Please try again.");
+	public void transferMoney() {
+		int accountNumber = 0;
+		double amount;
+		try { 
+			System.out.println("Please give the account number of the account you wish to transfer money to.");
+			accountNumber = Integer.parseInt(sc.nextLine()); 
+		} catch (Exception e) {
+			System.out.println("That isn't a valid account number. Returning to the main menu, please try again.");
 			System.out.println("-----------------------------------------");
+
 		}
+		
+		
+		
+		try {
+			System.out.println("How much money do you wish to transfer?");
+			amount = Double.parseDouble(sc.nextLine());
+			Account temp = user.account;
+			temp = bs.transfer(temp, amount, accountNumber);
+			user.account = temp;
+			System.out.println("Thank you, you have transfered " + amount + " dollars.");
+			System.out.println("Your current balance is " + user.account.getBalance());
+			System.out.println("Returning to the main menu");
+			System.out.println("-----------------------------------------");
+
+			
+		} catch (AccountDoesNotExistException e){
+		    System.out.println("That account could not be located.");
+		    System.out.println("Returning to the main menu.");
+			System.out.println("-----------------------------------------");
+
+		}
+			catch (Exception e) {
+		}
+			System.out.println("To transfer money you must specify a positive monetary value below your current balance.");
+			System.out.println("Returning to the main menu, please try again.");
+			System.out.println("-----------------------------------------");
+
+		}
+		
 	}
-	
-	
-}
+
+
