@@ -1,5 +1,5 @@
 package com.revature.exception;
 
-public class PasswordTooShortException extends Exception {
+public class PasswordTooShortException extends RuntimeException {
 
 }

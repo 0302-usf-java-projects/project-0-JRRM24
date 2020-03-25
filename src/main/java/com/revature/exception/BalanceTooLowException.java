@@ -1,5 +1,5 @@
 package com.revature.exception;
 
-public class BalanceTooLowException extends Exception {
+public class BalanceTooLowException extends RuntimeException {
 
 }

@@ -1,10 +1,10 @@
-package com.revature.service;
+ package com.revature.service;
 import com.revature.exception.*;
 import com.revature.model.*;
 import com.revature.repository.*;
 import java.util.*;
 public class BankServices {
-	AccountDAO accountManager = new AccountDAO();
+	public AccountDAO accountManager = new AccountDAO();
 	
 	public int makeAccount(String username, String password, double initialDeposit) throws PasswordTooShortException, UsernameAlreadyTakenException {
 		Random rand = new Random();

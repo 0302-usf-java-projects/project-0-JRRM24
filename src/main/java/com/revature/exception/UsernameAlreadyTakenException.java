@@ -1,5 +1,5 @@
 package com.revature.exception;
 
-public class UsernameAlreadyTakenException extends Exception {
+public class UsernameAlreadyTakenException extends RuntimeException {
 
 }
