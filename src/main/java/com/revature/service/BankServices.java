@@ -4,7 +4,7 @@ import com.revature.model.*;
 import com.revature.repository.*;
 import java.util.*;
 public class BankServices {
-	public AccountDAO accountManager = new AccountDAO();
+	public DBDAO accountManager = new DBDAO();
 	
 	public int makeAccount(String username, String password, double initialDeposit) throws PasswordTooShortException, UsernameAlreadyTakenException {
 		Random rand = new Random();

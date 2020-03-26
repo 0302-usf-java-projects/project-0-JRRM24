@@ -48,6 +48,7 @@ public class MenuRunner {
 					user = new User();
 					System.out.println("You are now logged out.");
 					System.out.println("Returning to the welcome menu.");
+					System.out.println("-----------------------------------------");
 					break;
 				default:
 					System.out.println("I'm sorry, I didn't understand that input. Care to try again?");
@@ -96,6 +97,7 @@ public class MenuRunner {
 				} catch (Exception e) {
 					System.out.println("You must enter an positive amount of money to deposit.");
 					System.out.println("Try again");
+					System.out.println("-----------------------------------------");
 					amount = 0;
 				}
 				
@@ -224,10 +226,10 @@ public class MenuRunner {
 
 		}
 			catch (Exception e) {
-		}
+		
 			System.out.println("To transfer money you must specify a positive monetary value below your current balance.");
 			System.out.println("Returning to the main menu, please try again.");
-			System.out.println("-----------------------------------------");
+			System.out.println("-----------------------------------------");}
 
 		}
 		
