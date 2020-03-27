@@ -6,12 +6,13 @@ import java.util.*;
 public class BankServices {
 	public DBDAO accountManager = new DBDAO();
 	
-	public int makeAccount(String username, String password, double initialDeposit) throws PasswordTooShortException, UsernameAlreadyTakenException {
+	public int makeAccount(String username, String password, double initialDeposit, String FirstName, String LastName) throws UsernameAlreadyTakenException {
 		
 		HashMap<Integer, Account> accounts = accountManager.getAccounts();
+		
 		int nextAccountNumber = accounts.keySet().size() + 100;
 	
-		Account newAccount = new Account(username, password, initialDeposit, nextAccountNumber);
+		Account newAccount = new Account(username, password, initialDeposit, nextAccountNumber, FirstName, LastName);
 		accountManager.addAccount(nextAccountNumber, newAccount);
 		return nextAccountNumber;
 	}

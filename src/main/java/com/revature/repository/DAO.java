@@ -1,4 +1,5 @@
 package com.revature.repository;
+import com.revature.exception.UsernameAlreadyTakenException;
 import com.revature.model.*;
 import java.util.*;
 
@@ -7,6 +8,6 @@ public interface DAO {
 	public Account getAccount(int accountNumber);
 	public void updateAccount(int accountNumber, Account account);
 	
-	public void addAccount(int accountNumber, Account account);
+	public void addAccount(int accountNumber, Account account) throws UsernameAlreadyTakenException;
 	
 }

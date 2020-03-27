@@ -1,5 +1,6 @@
 package com.revature.repository;
-
+import java.util.*;
+import com.revature.exception.*;
 import java.util.HashMap;
 import java.sql.*;
 import com.revature.model.*;
@@ -22,7 +23,9 @@ public class DBDAO implements DAO {
 			String newPassword = rs.getString("password");
 			int newAccountNumber = rs.getInt("account_number");
 			double newBalance = rs.getDouble("balance");
-			result = new Account(newUsername, newPassword, newBalance, newAccountNumber);
+			String firstName = rs.getString("FirstName");
+			String lastName = rs.getString("LastName");
+			result = new Account(newUsername, newPassword, newBalance, newAccountNumber, firstName, lastName);
 			accounts.put(newAccountNumber, result);
 		}
 		
@@ -50,7 +53,9 @@ public class DBDAO implements DAO {
 			String newPassword = rs.getString("password");
 			int newAccountNumber = rs.getInt("account_number");
 			double newBalance = rs.getDouble("balance");
-			result = new Account(newUsername, newPassword, newBalance, accountNumber);
+			String firstName = rs.getString("FirstName");
+			String lastName = rs.getString("LastName");
+			result = new Account(newUsername, newPassword, newBalance, accountNumber, firstName, lastName);
 	
 		}
 		
@@ -61,11 +66,13 @@ public class DBDAO implements DAO {
 	}
 
 	@Override
-	public void updateAccount(int accountNumber, Account account) {
-		//update accounts set balance = account.balance where accountnumber = accountnumber
+	public void updateAccount(int accountNumber, Account account)  {
+		
 		String username = account.getUserName();
 		String password = account.getPassword();
 		double balance = account.getBalance();
+		String firstName = account.getfirstName();
+		String lastName = account.getlastName();
 		try(Connection conn = ConnectionUtil.connect())
 		{
 		StringBuilder query = new StringBuilder();
@@ -86,10 +93,22 @@ public class DBDAO implements DAO {
 	
 	
 	@Override
-	 public void addAccount(int accountnumber, Account account) {
+	 public void addAccount(int accountnumber, Account account) throws UsernameAlreadyTakenException {
+		HashMap<Integer, Account> accounts = new DBDAO().getAccounts();
+		Set<Integer> keys = accounts.keySet();
+		for (Integer key: keys) {
+			Account temporary = accounts.get(key);
+			String firstUsername = account.getUserName();
+			String secondUsername = temporary.getUserName();
+			if(firstUsername.equals(secondUsername)) {
+				throw new UsernameAlreadyTakenException();
+			}
+		}
 		String username = account.getUserName();
 		String password = account.getPassword();
 		double balance = account.getBalance();
+		String firstName = account.getfirstName();
+		String lastName = account.getlastName();
 		try(Connection conn = ConnectionUtil.connect())
 		{
 		StringBuilder query = new StringBuilder();
@@ -98,7 +117,9 @@ public class DBDAO implements DAO {
 		query.append("'" +accountnumber+"'" + ",");
 		query.append("'" +username+"'" + ",");
 		query.append("'" +password+"'" + ",");
-		query.append("'" +balance+"'");
+		query.append("'" +balance+"'"+",");
+		query.append("'"+firstName+"'"+",");
+		query.append("'"+lastName+"'");
 		query.append(")");
 		query.append(";");
 		java.sql.Statement s = conn.createStatement();

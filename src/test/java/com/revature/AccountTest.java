@@ -18,7 +18,7 @@ public class AccountTest {
 	private static Account testAccount1 = null;
 	@Before
 	public void setUp() {
-		AccountTest.testAccount1 = new Account("John Smith", "password", 500, 1);
+		AccountTest.testAccount1 = new Account("John Smith", "password", 500, 1, "T", "T");
 		
 	}
 	

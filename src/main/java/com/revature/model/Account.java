@@ -5,17 +5,29 @@ public class Account {
 	private String password;
 	private int accountNumber; 
 	private double balance;
+	String firstName;
+	String lastName;
 	public static int minimumPasswordSize = 8;
 
 	
-	public Account(String userName, String password, double initialDeposit, int accountNumber) throws PasswordTooShortException {
+	public Account(String userName, String password, double initialDeposit, int accountNumber, String firstName, String lastName)  {
+		this.password = password;
 		this.setUserName(userName);
-		this.setPassword(password);
 		this.balance = initialDeposit;
 		this.accountNumber = accountNumber;
+		this.firstName = firstName;
+		this.lastName = lastName;
 	}
 	public Account() {
 		
+	}
+	
+	public String getfirstName() {
+		return this.firstName;
+	}
+	
+	public String getlastName() {
+		return this.lastName;
 	}
 	
 	 public boolean authenticate(String username, String password) {
@@ -43,12 +55,7 @@ public class Account {
 	public String getPassword() {
 		return password;
 	}
-	private void setPassword(String password) throws PasswordTooShortException {
-		if (password.length() < Account.minimumPasswordSize) {
-			throw new PasswordTooShortException();
-		}
-		this.password = password;
-	}
+
 	public int getAccountNumber() {
 		return accountNumber;
 	}

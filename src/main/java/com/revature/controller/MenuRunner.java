@@ -83,11 +83,27 @@ public class MenuRunner {
 	public void runAccountCreation() {
 		int numTries = 0; 
 		int accountNumber = 0;
+		String password = null;
 		while (numTries < 3) {
 			System.out.println("Please enter your desired username");
 			String username = sc.nextLine(); 
-			System.out.println("Please enter your desired password"); 
-			String password = sc.nextLine(); 
+			
+			try {System.out.println("Please enter your desired password"); 
+				 password = sc.nextLine(); 
+				if (password.length() < 8) {
+					throw new PasswordTooShortException();
+				}
+			} catch (PasswordTooShortException e) {
+				System.out.println("I'm sorry, but passwords must be at least 8 characters long. Try again.");
+				numTries += 1; 
+				continue;
+			}
+			
+			
+			System.out.println("Please enter your first name");
+			String firstName = sc.nextLine();
+			System.out.println("Please enter your last name");
+			String lastName = sc.nextLine();
 			
 			try {
 				System.out.println("Please enter the amount of money you would like to deposit in your new account.");
@@ -105,14 +121,12 @@ public class MenuRunner {
 					System.out.println("I'm sorry, but you must deposit at least $200 to open a new account.");
 					System.out.println("-----------------------------------------");
 				} else {
-				System.out.println("Creating a new account with an initial balance of " + amount);
-				 accountNumber = bs.makeAccount(username, password, amount); 
-				break;}
+				   accountNumber = bs.makeAccount(username, password, amount, firstName, lastName); 
+					System.out.println("Creating a new account with an initial balance of " + amount);
+
+				break;}}
 				
-			} catch (PasswordTooShortException e) {
-				System.out.println("I'm sorry, but passwords must be at least 8 characters long. Please try again.");
-				System.out.println("-----------------------------------------");
-			} catch (UsernameAlreadyTakenException e) {
+			 catch (UsernameAlreadyTakenException e) {
 				System.out.println("I'm sorry, but that username is already taken. Please try again.");
 				System.out.println("-----------------------------------------");
 			}
@@ -225,11 +239,11 @@ public class MenuRunner {
 			System.out.println("-----------------------------------------");
 
 		}
-//			catch (Exception e) {
-//		
-//			System.out.println("To transfer money you must specify a positive monetary value below your current balance.");
-//			System.out.println("Returning to the main menu, please try again.");
-//			System.out.println("-----------------------------------------");}
+		catch (Exception e) {
+	
+		System.out.println("To transfer money you must specify a positive monetary value below your current balance.");
+		System.out.println("Returning to the main menu, please try again.");
+			System.out.println("-----------------------------------------");}
 
 		}
 		
