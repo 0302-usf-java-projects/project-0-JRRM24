@@ -28,7 +28,7 @@ public class AccountDAO implements DAO {
 		
 	}
 
-	@Override
+	
 	public void updateAccounts(HashMap<Integer, Account> accounts) {
 		AccountRepo.listOfAccounts = accounts;
 		

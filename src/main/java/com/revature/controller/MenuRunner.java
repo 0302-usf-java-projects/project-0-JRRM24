@@ -135,7 +135,7 @@ public class MenuRunner {
 		System.out.println("Please enter your password");
 		String password = sc.nextLine();
 		Account result = bs.logIn(username, password);
-		if (result.nullFlag == true) {
+		if (result == null) {
 			System.out.println("Either your username or password was incorrect. Please try again.");
 		} else {
 			user.loggedIn = true; 
@@ -225,11 +225,11 @@ public class MenuRunner {
 			System.out.println("-----------------------------------------");
 
 		}
-			catch (Exception e) {
-		
-			System.out.println("To transfer money you must specify a positive monetary value below your current balance.");
-			System.out.println("Returning to the main menu, please try again.");
-			System.out.println("-----------------------------------------");}
+//			catch (Exception e) {
+//		
+//			System.out.println("To transfer money you must specify a positive monetary value below your current balance.");
+//			System.out.println("Returning to the main menu, please try again.");
+//			System.out.println("-----------------------------------------");}
 
 		}
 		

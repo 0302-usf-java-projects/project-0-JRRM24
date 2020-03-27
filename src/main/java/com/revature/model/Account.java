@@ -6,7 +6,7 @@ public class Account {
 	private int accountNumber; 
 	private double balance;
 	public static int minimumPasswordSize = 8;
-	public boolean nullFlag = false; 
+
 	
 	public Account(String userName, String password, double initialDeposit, int accountNumber) throws PasswordTooShortException {
 		this.setUserName(userName);
@@ -15,7 +15,7 @@ public class Account {
 		this.accountNumber = accountNumber;
 	}
 	public Account() {
-		boolean nullFlag = true; 
+		
 	}
 	
 	 public boolean authenticate(String username, String password) {

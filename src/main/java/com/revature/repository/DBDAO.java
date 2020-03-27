@@ -83,12 +83,8 @@ public class DBDAO implements DAO {
 		
 	}
 
-	@Override
-	public void updateAccounts(HashMap<Integer, Account> accounts) {
-		
-		
-	}
-
+	
+	
 	@Override
 	 public void addAccount(int accountnumber, Account account) {
 		String username = account.getUserName();
