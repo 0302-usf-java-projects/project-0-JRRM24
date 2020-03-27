@@ -7,7 +7,7 @@ public class Account {
 	private double balance;
 	String firstName;
 	String lastName;
-	public static int minimumPasswordSize = 8;
+	private boolean admin_status = false; 
 
 	
 	public Account(String userName, String password, double initialDeposit, int accountNumber, String firstName, String lastName)  {
@@ -20,6 +20,14 @@ public class Account {
 	}
 	public Account() {
 		
+	}
+	
+	public boolean getAdminStatus() {
+		return this.admin_status;
+	}
+	
+	public void setAdminStatus() {
+		this.admin_status = true;
 	}
 	
 	public String getfirstName() {
