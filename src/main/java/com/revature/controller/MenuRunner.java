@@ -88,7 +88,7 @@ public class MenuRunner {
 	public void approveOrRejectAccount() {
 		List<Account> pendingAccounts = bs.getPendingAccounts();
 		if (pendingAccounts.size() == 0) {
-			System.out.println("There are currently no account requiring approval.");
+			System.out.println("There are currently no accounts requiring approval.");
 		}
 		List<Account> result = new ArrayList<>();
 		for (Account a: pendingAccounts) {
@@ -98,14 +98,20 @@ public class MenuRunner {
 			String name = a.getfirstName() + " " + a.getlastName();
 			System.out.println("Name: " + name + " Username: " + username + " Password: " + password);
 			System.out.println("Initial deposit: " + balance);
-			System.out.println("Would you like to approve this account? Select y for yes, n for no.");
-			String input = sc.nextLine();
+			while (true) {
+				System.out.println("Would you like to approve this account? Select y for yes, n for no.");
+				String input = sc.nextLine();
 			if (input.equals("y")) {
 				System.out.println("Thank you, I will make the account available.");
 				a.pending = false;
 				result.add(a);
+				break;
 			} else if (input.equals("n")) {
 				System.out.println("Thank you, the account will not be approved.");
+				break;
+			} else {
+				System.out.println("I'm sorry, I didn't understand that input. Please try again.");
+			}
 			}
 		}
 		bs.updateMultipleAccounts(result);
@@ -278,6 +284,8 @@ public class MenuRunner {
 			System.out.println("Returning to the main menu. Please try again.");
 			System.out.println("-----------------------------------------");
 
+		} catch (Exception e) {
+			System.out.println("You need to enter an amount of money to make a withdrawal. Please try again.");
 		}
 	}
 	
@@ -322,5 +330,7 @@ public class MenuRunner {
 		}
 		
 	}
+	
+
 
 

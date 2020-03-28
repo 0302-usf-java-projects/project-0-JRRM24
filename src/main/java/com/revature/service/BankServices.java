@@ -62,12 +62,12 @@ public class BankServices {
 		if (!exists) {
 			throw new AccountDoesNotExistException();
 		} else {
-			Account otherAccount = accounts.get(accountNumber);
+			Account otherAccount = accountManager.getAccount(accountNumber);
 			otherAccount.increaseBalance(amount);
 			accountManager.updateAccount(otherAccount);
 			account.decreaseBalance(amount);
 			accountManager.updateAccount(account);
-			accountManager.insertTransaction(account, "withdrawal", otherAccount.getAccountNumber(), amount);
+			accountManager.insertTransaction(account, "transfer", otherAccount.getAccountNumber(), amount);
 			return account;
 		}
 		

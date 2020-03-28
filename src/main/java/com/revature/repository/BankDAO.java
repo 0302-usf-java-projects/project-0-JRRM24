@@ -27,9 +27,7 @@ public class BankDAO implements BetterDAO<Account> {
 		boolean admin = rs.getBoolean("employee");
 		boolean pending = rs.getBoolean("pending");
 		result = new Account(newUsername, newPassword, newBalance, newAccountNumber, firstName, lastName, pending,admin);
-		if (admin == true) {
-			result.setAdminStatus();
-		}
+		
 	
 		}} catch(SQLException e) {
 		e.printStackTrace();
@@ -170,7 +168,7 @@ public class BankDAO implements BetterDAO<Account> {
 			int other_account = rs.getInt("other_account");
 			String transaction_type = rs.getString("transaction_type");
 			if (transaction_type.equals("transfer")) {
-				String newTransaction = "Account: " + account_number + " transfered " + balance + " " + other_account;
+				String newTransaction = "Account: " + account_number + " transfered " + balance + " to Account: " + other_account;
 				results.add(newTransaction);
 			} else if (transaction_type.equals("withdrawal")) 
 			{
