@@ -29,7 +29,8 @@ public class MenuRunner {
 		}
 			
 			
-			while (user.loggedIn) {
+			while (user.loggedIn && !user.account.getAdminStatus()) {
+				
 				String input = runMainMenu();
 				switch (input) {
 				case "1": 
@@ -54,11 +55,74 @@ public class MenuRunner {
 					System.out.println("I'm sorry, I didn't understand that input. Care to try again?");
 				}
 			}
+			
+			while (user.loggedIn && user.account.getAdminStatus()) {
+				System.out.println("Thank you for logging in, admin.");
+				System.out.println("Please select from one of the followig options.");
+				System.out.println("1: View pending accounts to approve or reject");
+				System.out.println("2: View recent transactions.");
+				System.out.println("3: Log Out");
+				String input = sc.nextLine();
+				switch (input) {
+				case "1": approveOrRejectAccount();
+						break; 
+				case "2": viewTransactions();
+					break; 
+					
+				case "3": 
+					user = new User();
+					System.out.println("You are now logged out.");
+					System.out.println("Returning to the welcome menu.");
+					System.out.println("-----------------------------------------");
+					break;
+				default:
+					System.out.println("I'm sorry, but I didn't understand that input. Please try again.");
+				}
+				
+			}
 			runMenu();
 		
 		
 	}
 	
+	public void approveOrRejectAccount() {
+		List<Account> pendingAccounts = bs.getPendingAccounts();
+		if (pendingAccounts.size() == 0) {
+			System.out.println("There are currently no account requiring approval.");
+		}
+		List<Account> result = new ArrayList<>();
+		for (Account a: pendingAccounts) {
+			String username = a.getUserName();
+			String password = a.getPassword();
+			double balance = a.getBalance();
+			String name = a.getfirstName() + " " + a.getlastName();
+			System.out.println("Name: " + name + " Username: " + username + " Password: " + password);
+			System.out.println("Initial deposit: " + balance);
+			System.out.println("Would you like to approve this account? Select y for yes, n for no.");
+			String input = sc.nextLine();
+			if (input.equals("y")) {
+				System.out.println("Thank you, I will make the account available.");
+				a.pending = false;
+				result.add(a);
+			} else if (input.equals("n")) {
+				System.out.println("Thank you, the account will not be approved.");
+			}
+		}
+		bs.updateMultipleAccounts(result);
+		System.out.println("That concludes the pending business. Returning to the menu.");
+		System.out.println("-----------------------------------------");
+	}
+	
+	
+	public void viewTransactions() {
+		System.out.println("I will now list recent transactions.");
+		List<String> transactions = bs.getTransactionHistory();
+		for (String e: transactions) {
+			System.out.println(e);
+		}
+		System.out.println("Thank you, returning to the main menu.");
+		System.out.println("-----------------------------------------");
+	}
 	
 	public String runWelcomeMenu() {
 		System.out.println("Welcome to the bank. Please select one of the following options.");
@@ -137,7 +201,8 @@ public class MenuRunner {
 			System.out.println("It seems like you were having some issues. Returning to the menu, please try again.");
 			System.out.println("-----------------------------------------");
 		} else {
-			System.out.println("Thank you, your account has been created and you may now log in.");
+			System.out.println("Thank you, your account has been created and is pending approval.");
+			System.out.println("You can check back later to see if your account has been approved");
 			System.out.println("Your account number is " + accountNumber + ". Please write it down.");
 			System.out.println("-----------------------------------------");
 		}
@@ -148,11 +213,20 @@ public class MenuRunner {
 		String username = sc.nextLine();
 		System.out.println("Please enter your password");
 		String password = sc.nextLine();
-		Account result = bs.logIn(username, password);
+		Account result = null;
+		
+		try {
+			 result = bs.logIn(username, password);
+		} catch (AccountNotApprovedException e) {
+			System.out.println("I'm sorry, but your account needs to be approved by an employee before you can use it.");
+			System.out.println("Returning to the main menu, please try again later.");
+			System.out.println("-----------------------------------------");
+		}
+		
+		
 		if (result == null) {
 			System.out.println("Either your username or password was incorrect. Please try again.");
-		} else {
-			user.loggedIn = true; 
+		} else {	user.loggedIn = true; 
 			user.account = result;
 			System.out.println("Thank you, you are now logged in. Taking you to the main menu.");
 			System.out.println("-----------------------------------------");

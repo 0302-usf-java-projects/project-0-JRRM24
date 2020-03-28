@@ -16,20 +16,25 @@ public class BankServices {
 		accountManager.addAccount(newAccount);
 		return nextAccountNumber;
 	}
-	public Account logIn(String username, String password) {
+	public Account logIn(String username, String password) throws AccountNotApprovedException {
 		Account result = null;
 		List<Account> accounts = accountManager.getAccounts();
 		for (Account i: accounts) {
 			if (i.authenticate(username, password)) {
 				result = i;
+				if (result.pending == true) {
+					throw new AccountNotApprovedException();
+				}
 			}
 		}
+		
 		return result; 
 	}
 	
 	public Account deposit(Account account, double amount) {
 		account.increaseBalance(amount);
 		accountManager.updateAccount(account);
+		accountManager.insertTransaction(account, "deposit", 1, amount);
 		return account;
 	}
 	
@@ -37,7 +42,9 @@ public class BankServices {
 		if (amount > account.getBalance()) {throw new BalanceTooLowException();};
 		account.decreaseBalance(amount);
 		accountManager.updateAccount(account);
+		accountManager.insertTransaction(account, "withdrawal", 1, amount);
 		return account;
+		
 	}
 	
 	public Account transfer(Account account, double amount, int accountNumber) throws BalanceTooLowException, AccountDoesNotExistException {
@@ -60,8 +67,30 @@ public class BankServices {
 			accountManager.updateAccount(otherAccount);
 			account.decreaseBalance(amount);
 			accountManager.updateAccount(account);
+			accountManager.insertTransaction(account, "withdrawal", otherAccount.getAccountNumber(), amount);
 			return account;
 		}
 		
+	}
+	
+	public List<Account> getPendingAccounts() {
+		List<Account> accounts = accountManager.getAccounts();
+		List<Account> result = new ArrayList<Account>();
+		for (Account a: accounts) {
+			if (a.pending == true) {
+				result.add(a);
+			}
+		}
+		return result;
+ 	}
+	
+	public List<String> getTransactionHistory() {
+		return accountManager.getTransactions();
+	}
+	
+	public void updateMultipleAccounts(List<Account> accounts) {
+		for (Account e: accounts) {
+			accountManager.updateAccount(e);
+		}
 	}
 }

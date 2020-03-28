@@ -8,6 +8,7 @@ public class Account {
 	String firstName;
 	String lastName;
 	private boolean admin_status = false; 
+	public boolean pending;
 
 	
 	public Account(String userName, String password, double initialDeposit, int accountNumber, String firstName, String lastName)  {
@@ -18,10 +19,24 @@ public class Account {
 		this.firstName = firstName;
 		this.lastName = lastName;
 	}
+	
+	public Account(String userName, String password, double initialDeposit, int accountNumber, String firstName, String lastName, boolean pending, boolean admin_status)  {
+		this.password = password;
+		this.setUserName(userName);
+		this.balance = initialDeposit;
+		this.accountNumber = accountNumber;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.pending = pending;
+		this.admin_status = admin_status;
+	}
 	public Account() {
 		
 	}
 	
+	public void setpending() {
+		this.pending = true;
+	}
 	public boolean getAdminStatus() {
 		return this.admin_status;
 	}
