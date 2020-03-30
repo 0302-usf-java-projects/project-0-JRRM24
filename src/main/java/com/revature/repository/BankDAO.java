@@ -1,5 +1,11 @@
 package com.revature.repository;
 import com.revature.model.*;
+/**
+ * This class contains all of my actual calls to the database. I
+ *There are two tables in the database, one for accounts and one for transactions.
+ *The logic to query the database for the information to reconstruct account objects 
+ *or create a list of transactions is here.
+ */
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

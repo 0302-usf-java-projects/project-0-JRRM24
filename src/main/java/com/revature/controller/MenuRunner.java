@@ -1,14 +1,18 @@
 package com.revature.controller;
 import com.revature.model.*;
+import com.revature.Main;
 import com.revature.exception.*;
 import com.revature.repository.*;
 import com.revature.service.*; 
-import java.util.*; 
+import java.util.*;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger; 
 public class MenuRunner {
 	User user = new User(); 
 	Scanner sc = new Scanner(System.in); 
 	BankServices bs = new BankServices();
-	
+
 	public void runMenu() {
 		while (!user.loggedIn) {
 			String input = runWelcomeMenu();
@@ -184,6 +188,8 @@ public class MenuRunner {
 					System.out.println("You must enter an positive amount of money to deposit.");
 					System.out.println("Try again");
 					System.out.println("-----------------------------------------");
+					
+
 					amount = 0;
 				}
 				
@@ -199,6 +205,8 @@ public class MenuRunner {
 			 catch (UsernameAlreadyTakenException e) {
 				System.out.println("I'm sorry, but that username is already taken. Please try again.");
 				System.out.println("-----------------------------------------");
+				
+
 			}
 			numTries += 1; 
 		}
@@ -227,6 +235,7 @@ public class MenuRunner {
 			System.out.println("I'm sorry, but your account needs to be approved by an employee before you can use it.");
 			System.out.println("Returning to the main menu, please try again later.");
 			System.out.println("-----------------------------------------");
+			
 		}
 		
 		
@@ -283,6 +292,7 @@ public class MenuRunner {
 			System.out.println("You must withdraw a positive amount of money that is greater than your current balance.");
 			System.out.println("Returning to the main menu. Please try again.");
 			System.out.println("-----------------------------------------");
+			
 
 		} catch (Exception e) {
 			System.out.println("You need to enter an amount of money to make a withdrawal. Please try again.");
