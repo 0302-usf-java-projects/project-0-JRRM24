@@ -14,8 +14,9 @@ public class BankDAO implements BetterDAO<Account> {
 		Account result = null;
 		try(Connection conn = ConnectionUtil.connect())
 		{
-		String query = "select * from accounts where account_number = " + accountnumber;
+		String query = "select * from accounts where account_number = ?;";
 		PreparedStatement ps = conn.prepareStatement(query);
+		ps.setInt(1,accountnumber);
 		ResultSet rs = ps.executeQuery();
 		while (rs.next()) {
 		String newUsername = rs.getString("user_name");
@@ -41,15 +42,20 @@ public class BankDAO implements BetterDAO<Account> {
 		{
 		StringBuilder query = new StringBuilder();
 		
-		query.append("insert into transactions values (");
-		query.append("'" +account.getAccountNumber()+"'" + ",");
-		query.append("'" +type+"'" + ",");
-		query.append("'" +other_account+"'" + ",");
-		query.append("'" +amount+"'");
-		query.append(")");
-		query.append(";");
+		query.append("insert into transactions values (?, ?, ?, ?);");
+		//changed to prepared statement 
+//		query.append("'" +account.getAccountNumber()+"'" + ",");
+//		query.append("'" +type+"'" + ",");
+//		query.append("'" +other_account+"'" + ",");
+//		query.append("'" +amount+"'");
+//		query.append(")");
+//		query.append(";");
 		PreparedStatement ps = conn.prepareStatement(query.toString());
-		ps.executeUpdate();
+		ps.setInt(1, account.getAccountNumber());
+		ps.setString(2, type);
+		ps.setInt(3,  other_account);
+		ps.setDouble(4, amount);
+;		ps.executeUpdate();
 		} catch(SQLException e) {
 		e.printStackTrace();
 		}
@@ -99,11 +105,13 @@ public class BankDAO implements BetterDAO<Account> {
 		{
 		StringBuilder query = new StringBuilder();
 		
-		query.append("update accounts set balance = ");
-		query.append("'" +balance+"'");
-		query.append(" where account_number =");
-		query.append(" " + "'" + accountnumber + "'");
+		query.append("update accounts set balance = ? where account_number = ?; ");
+//		query.append("'" +balance+"'");
+//		query.append(" where account_number =");
+//		query.append(" " + "'" + accountnumber + "'");
 		PreparedStatement ps = conn.prepareStatement(query.toString());
+		ps.setDouble(1, balance);
+		ps.setInt(2, accountnumber);
 		ps.executeUpdate();
 			if (pending == false) {
 				StringBuilder sql = new StringBuilder();
@@ -136,16 +144,22 @@ public class BankDAO implements BetterDAO<Account> {
 		{
 		StringBuilder query = new StringBuilder();
 		
-		query.append("insert into accounts values (");
-		query.append("'" +accountnumber+"'" + ",");
-		query.append("'" +username+"'" + ",");
-		query.append("'" +password+"'" + ",");
-		query.append("'" +balance+"'"+",");
-		query.append("'"+firstName+"'"+",");
-		query.append("'"+lastName+"'");
-		query.append(")");
-		query.append(";");
+		query.append("insert into accounts values (?, ?, ?, ?, ?, ?);");
+//		query.append("'" +accountnumber+"'" + ",");
+//		query.append("'" +username+"'" + ",");
+//		query.append("'" +password+"'" + ",");
+//		query.append("'" +balance+"'"+",");
+//		query.append("'"+firstName+"'"+",");
+//		query.append("'"+lastName+"'");
+//		query.append(")");
+//		query.append(";");
 		PreparedStatement ps = conn.prepareStatement(query.toString());
+		ps.setInt(1, accountnumber);
+		ps.setString(2, username);
+		ps.setString(3, password);
+		ps.setDouble(4, balance);
+		ps.setString(5, firstName);
+		ps.setString(6,  lastName);
 		ps.executeUpdate();
 		
 		} catch(SQLException e) {
