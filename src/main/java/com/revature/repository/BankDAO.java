@@ -14,6 +14,101 @@ import java.sql.SQLException;
 import java.util.*;
 import com.revature.exception.*;
 public class BankDAO implements BetterDAO<Account> {
+	
+	public Loan getLoan(int accountnumber) {
+		Loan result = null;
+		try(Connection conn = ConnectionUtil.connect())
+		{
+		String query = "select * from loans where account_number = ?;";
+		PreparedStatement ps = conn.prepareStatement(query);
+		ps.setInt(1,accountnumber);
+		ResultSet rs = ps.executeQuery();
+		while (rs.next()) {
+			int accountNumber = rs.getInt("account_number");
+			double balance = rs.getDouble("remaining_balance");
+			boolean pending = rs.getBoolean("pending");
+			String reason = rs.getString("reason");
+			result = new Loan(accountNumber, balance, pending, reason);
+	
+		}} catch(SQLException e) {
+		e.printStackTrace();
+		}
+		return result;
+		
+	}
+	
+	public void deleteLoan(int accountNumber) {
+		try(Connection conn = ConnectionUtil.connect())
+		{
+		String query = "delete from loans where account_number = ?;";
+		PreparedStatement ps = conn.prepareStatement(query);
+		ps.setDouble(1, accountNumber);
+		ps.executeUpdate();
+		} catch(SQLException e) {
+		e.printStackTrace();
+		}
+	}
+	
+	public void insertLoan(Loan loan) {
+		int accountNumber = loan.getAccountNumber();
+		boolean pending = loan.isPending();
+		double balance = loan.getRemainingBalance();
+		String reason = loan.getReason();
+		try(Connection conn = ConnectionUtil.connect())
+		{
+		String query = "insert into loans values (?, ? , ? , ?);";
+		PreparedStatement ps = conn.prepareStatement(query);
+		ps.setDouble(2, balance);
+		ps.setBoolean(3, pending);
+		ps.setInt(1, accountNumber);
+		ps.setString(4, reason);
+		ps.executeUpdate();
+		} catch(SQLException e) {
+		e.printStackTrace();
+		}
+	}
+	
+	public void updateLoan(Loan loan) {
+		int accountNumber = loan.getAccountNumber();
+		boolean pending = loan.isPending();
+		double balance = loan.getRemainingBalance();
+		String reason = loan.getReason();
+		try(Connection conn = ConnectionUtil.connect())
+		{
+		String query = "update loans set remaining_balance = ?, pending = ? where account_number = ?;";
+		PreparedStatement ps = conn.prepareStatement(query);
+		ps.setDouble(1, balance);
+		ps.setBoolean(2, pending);
+		ps.setInt(3, accountNumber);
+		ps.executeUpdate();
+		} catch(SQLException e) {
+		e.printStackTrace();
+		}
+		
+	}
+	
+	public List<Loan> getPendingLoans() {
+		List<Loan> result = new ArrayList<>();
+		try(Connection conn = ConnectionUtil.connect())
+		{
+		String query = "select * from loans where pending = ?;";
+		PreparedStatement ps = conn.prepareStatement(query);
+		ps.setBoolean(1,true);
+		ResultSet rs = ps.executeQuery();
+		while (rs.next()) {
+		int accountNumber = rs.getInt("account_number");
+		double balance = rs.getDouble("remaining_balance");
+		boolean pending = rs.getBoolean("pending");
+		String reason = rs.getString("reason");
+		Loan l = new Loan(accountNumber, balance, pending, reason);
+		result.add(l);
+		
+		}} catch(SQLException e) {
+		e.printStackTrace();
+		}
+		return result;
+	}
+	
 
 	@Override
 	public Account getAccount(int accountnumber) {
@@ -205,6 +300,57 @@ public class BankDAO implements BetterDAO<Account> {
 		e.printStackTrace();
 		}
 		return results;
+	}
+	
+	public void deleteEmployee(int accountNumber) {
+		try(Connection conn = ConnectionUtil.connect())
+		{
+		StringBuilder query = new StringBuilder();
+		
+		query.append("delete from accounts where account_number = ?");
+		PreparedStatement ps = conn.prepareStatement(query.toString());
+		ps.setInt(1, accountNumber);
+		ps.executeUpdate();
+		
+		} catch(SQLException e) {
+		e.printStackTrace();
+		} 
+	}
+	
+	public void createEmployee(Account account) {
+		String username = account.getUserName();
+		String password = account.getPassword();
+		double balance = account.getBalance();
+		String firstName = account.getfirstName();
+		String lastName = account.getlastName();
+		int accountnumber = account.getAccountNumber();
+		try(Connection conn = ConnectionUtil.connect())
+		{
+		StringBuilder query = new StringBuilder();
+		
+		query.append("insert into accounts values (?, ?, ?, ?, ?, ?, ?, ?);");
+//		query.append("'" +accountnumber+"'" + ",");
+//		query.append("'" +username+"'" + ",");
+//		query.append("'" +password+"'" + ",");
+//		query.append("'" +balance+"'"+",");
+//		query.append("'"+firstName+"'"+",");
+//		query.append("'"+lastName+"'");
+//		query.append(")");
+//		query.append(";");
+		PreparedStatement ps = conn.prepareStatement(query.toString());
+		ps.setInt(1, accountnumber);
+		ps.setString(2, username);
+		ps.setString(3, password);
+		ps.setDouble(4, balance);
+		ps.setString(5, firstName);
+		ps.setString(6,  lastName);
+		ps.setBoolean(7, true);
+		ps.setBoolean(8, false);
+		ps.executeUpdate();
+		
+		} catch(SQLException e) {
+		e.printStackTrace();
+		}
 	}
 
 }

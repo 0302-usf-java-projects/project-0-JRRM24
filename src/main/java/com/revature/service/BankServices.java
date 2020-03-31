@@ -16,6 +16,7 @@ public class BankServices {
 		accountManager.addAccount(newAccount);
 		return nextAccountNumber;
 	}
+	
 	public Account logIn(String username, String password) throws AccountNotApprovedException {
 		Account result = null;
 		List<Account> accounts = accountManager.getAccounts();
@@ -93,4 +94,35 @@ public class BankServices {
 			accountManager.updateAccount(e);
 		}
 	}
+	
+	public void addLoan(Account account, double amount, String reason) {
+		Loan l = new Loan(account.getAccountNumber(), amount, true, reason);
+		accountManager.insertLoan(l);
+	}
+	
+	public List<Loan> getPendingLoans() {
+		return accountManager.getPendingLoans();
+	}
+	
+	public void updateMultipleLoans(List<Loan> loans) {
+		for (Loan l: loans) {
+			accountManager.updateLoan(l);
+		}
+	}
+	
+	public void updateLoan(int accountnumber) {
+		Loan l = accountManager.getLoan(accountnumber);
+		accountManager.updateLoan(l);;
+	}
+
+	public void createEmployee(String username, String password) {
+		int accountNumber = accountManager.getAccounts().size() + 100;
+		Account employee = new Account(username, password, 0, accountNumber, "Employee", "Employee", true, false); 
+		accountManager.createEmployee(employee);
+	}
+	
+	public void fireEmployee(int accountnumber) {
+		accountManager.deleteEmployee(accountnumber);
+	}
+	
 }
