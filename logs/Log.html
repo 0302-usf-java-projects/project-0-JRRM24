@@ -415,3 +415,106 @@ Log session start time Tue Mar 31 18:35:04 EDT 2020<br>
 <br>&nbsp;&nbsp;&nbsp;&nbsp;	at com.revature.controller.MenuRunner.runMenu(MenuRunner.java:44)
 <br>&nbsp;&nbsp;&nbsp;&nbsp;	at com.revature.Main.main(Main.java:21)
 </td></tr>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>Test Log HTML</title>
+<style type="text/css">
+<!--
+body, table {font-family: arial,sans-serif; font-size: x-small;}
+th {background: #336699; color: #FFFFFF; text-align: left;}
+-->
+</style>
+</head>
+<body bgcolor="#FFFFFF" topmargin="6" leftmargin="6">
+<hr size="1" noshade>
+Log session start time Tue Mar 31 20:17:24 EDT 2020<br>
+<br>
+<table cellspacing="0" cellpadding="4" border="1" bordercolor="#224466" width="100%">
+<tr>
+<th>Time</th>
+<th>Thread</th>
+<th>Level</th>
+<th>Category</th>
+<th>File:Line</th>
+<th>Message</th>
+</tr>
+
+<tr>
+<td>1</td>
+<td title="main thread">main</td>
+<td title="Level"><font color="#993300"><strong>ERROR</strong></font></td>
+<td title="com.revature.controller.MenuRunner category">com.revature.controller.MenuRunner</td>
+<td>MenuRunner.java:223</td>
+<td title="Message">UserNameAlreadyTakenException</td>
+</tr>
+<tr><td bgcolor="#993300" style="color:White; font-size : xx-small;" colspan="6">com.revature.exception.UsernameAlreadyTakenException
+<br>&nbsp;&nbsp;&nbsp;&nbsp;	at com.revature.repository.BankDAO.addAccount(BankDAO.java:235)
+<br>&nbsp;&nbsp;&nbsp;&nbsp;	at com.revature.service.BankServices.makeAccount(BankServices.java:16)
+<br>&nbsp;&nbsp;&nbsp;&nbsp;	at com.revature.controller.MenuRunner.runAccountCreation(MenuRunner.java:215)
+<br>&nbsp;&nbsp;&nbsp;&nbsp;	at com.revature.controller.MenuRunner.runMenu(MenuRunner.java:20)
+<br>&nbsp;&nbsp;&nbsp;&nbsp;	at com.revature.Main.main(Main.java:21)
+</td></tr>
+
+<tr>
+<td>14394</td>
+<td title="main thread">main</td>
+<td title="Level"><font color="#993300"><strong>ERROR</strong></font></td>
+<td title="com.revature.controller.MenuRunner category">com.revature.controller.MenuRunner</td>
+<td>MenuRunner.java:185</td>
+<td title="Message">PasswordTooshortException thrown</td>
+</tr>
+<tr><td bgcolor="#993300" style="color:White; font-size : xx-small;" colspan="6">com.revature.exception.PasswordTooShortException
+<br>&nbsp;&nbsp;&nbsp;&nbsp;	at com.revature.controller.MenuRunner.runAccountCreation(MenuRunner.java:181)
+<br>&nbsp;&nbsp;&nbsp;&nbsp;	at com.revature.controller.MenuRunner.runMenu(MenuRunner.java:20)
+<br>&nbsp;&nbsp;&nbsp;&nbsp;	at com.revature.Main.main(Main.java:21)
+</td></tr>
+
+<tr>
+<td>43249</td>
+<td title="main thread">main</td>
+<td title="Level"><font color="#993300"><strong>ERROR</strong></font></td>
+<td title="com.revature.controller.MenuRunner category">com.revature.controller.MenuRunner</td>
+<td>MenuRunner.java:253</td>
+<td title="Message">AccountNotApprovedException thrown</td>
+</tr>
+<tr><td bgcolor="#993300" style="color:White; font-size : xx-small;" colspan="6">com.revature.exception.AccountNotApprovedException
+<br>&nbsp;&nbsp;&nbsp;&nbsp;	at com.revature.service.BankServices.logIn(BankServices.java:27)
+<br>&nbsp;&nbsp;&nbsp;&nbsp;	at com.revature.controller.MenuRunner.runLogIn(MenuRunner.java:248)
+<br>&nbsp;&nbsp;&nbsp;&nbsp;	at com.revature.controller.MenuRunner.runMenu(MenuRunner.java:22)
+<br>&nbsp;&nbsp;&nbsp;&nbsp;	at com.revature.Main.main(Main.java:21)
+</td></tr>
+
+<tr>
+<td>326660</td>
+<td title="main thread">main</td>
+<td title="Level"><font color="#993300"><strong>ERROR</strong></font></td>
+<td title="com.revature.controller.MenuRunner category">com.revature.controller.MenuRunner</td>
+<td>MenuRunner.java:292</td>
+<td title="Message">User tried to deposit sometihng other than non positive amount of money</td>
+</tr>
+<tr><td bgcolor="#993300" style="color:White; font-size : xx-small;" colspan="6">java.lang.NumberFormatException: For input string: &quot;Look to windwar, consider phelbas&quot;
+<br>&nbsp;&nbsp;&nbsp;&nbsp;	at sun.misc.FloatingDecimal.readJavaFormatString(FloatingDecimal.java:2043)
+<br>&nbsp;&nbsp;&nbsp;&nbsp;	at sun.misc.FloatingDecimal.parseDouble(FloatingDecimal.java:110)
+<br>&nbsp;&nbsp;&nbsp;&nbsp;	at java.lang.Double.parseDouble(Double.java:538)
+<br>&nbsp;&nbsp;&nbsp;&nbsp;	at com.revature.controller.MenuRunner.depositMoney(MenuRunner.java:279)
+<br>&nbsp;&nbsp;&nbsp;&nbsp;	at com.revature.controller.MenuRunner.runMenu(MenuRunner.java:44)
+<br>&nbsp;&nbsp;&nbsp;&nbsp;	at com.revature.controller.MenuRunner.runMenu(MenuRunner.java:95)
+<br>&nbsp;&nbsp;&nbsp;&nbsp;	at com.revature.Main.main(Main.java:21)
+</td></tr>
+
+<tr>
+<td>366480</td>
+<td title="main thread">main</td>
+<td title="Level"><font color="#993300"><strong>ERROR</strong></font></td>
+<td title="com.revature.controller.MenuRunner category">com.revature.controller.MenuRunner</td>
+<td>MenuRunner.java:351</td>
+<td title="Message">AccountDoesNotExistException was thrown</td>
+</tr>
+<tr><td bgcolor="#993300" style="color:White; font-size : xx-small;" colspan="6">com.revature.exception.AccountDoesNotExistException
+<br>&nbsp;&nbsp;&nbsp;&nbsp;	at com.revature.service.BankServices.transfer(BankServices.java:64)
+<br>&nbsp;&nbsp;&nbsp;&nbsp;	at com.revature.controller.MenuRunner.transferMoney(MenuRunner.java:339)
+<br>&nbsp;&nbsp;&nbsp;&nbsp;	at com.revature.controller.MenuRunner.runMenu(MenuRunner.java:50)
+<br>&nbsp;&nbsp;&nbsp;&nbsp;	at com.revature.controller.MenuRunner.runMenu(MenuRunner.java:95)
+<br>&nbsp;&nbsp;&nbsp;&nbsp;	at com.revature.Main.main(Main.java:21)
+</td></tr>

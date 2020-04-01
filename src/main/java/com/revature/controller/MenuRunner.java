@@ -157,7 +157,7 @@ public class MenuRunner {
 	}
 	
 	public String runMainMenu() {
-		System.out.println("Welcome back to the bank. Please select one of the following options.");
+		System.out.println("Welcome back to the bank, " + user.account.getfirstName() + ". Please select one of the following options.");
 		System.out.println("1: Check your balance.");
 		System.out.println("2: Deposit money.");
 		System.out.println("3: Withdraw money.");

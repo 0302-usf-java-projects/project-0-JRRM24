@@ -117,6 +117,7 @@ public class BankServices {
 
 	public void createEmployee(String username, String password) {
 		int accountNumber = accountManager.getAccounts().size() + 100;
+		System.out.println("The account number for the new employee account you just created it " + accountNumber);
 		Account employee = new Account(username, password, 0, accountNumber, "Employee", "Employee", true, false); 
 		accountManager.createEmployee(employee);
 	}
